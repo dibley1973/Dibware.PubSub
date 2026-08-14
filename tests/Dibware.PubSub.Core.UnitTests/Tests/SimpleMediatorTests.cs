@@ -92,4 +92,88 @@ public sealed class SimpleMediatorTests
             Times.Once()
         );
     }
+
+    [TestMethod]
+    public async Task Publish_DoesNotCallHandler_WhenWrongHandlerIsRegistered()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddSimpleMediator(options =>
+        {
+            options.RegisterNotifications = true;
+        });
+
+        var notificationHandlerMock = new Mock<INotificationHandler<UserUnRegisteredEvent>>();
+
+        notificationHandlerMock
+            .Setup(handler => handler.Handle(It.IsAny<UserUnRegisteredEvent>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        _ = services.AddScoped<INotificationHandler<UserUnRegisteredEvent>>(provider => notificationHandlerMock.Object);
+
+        var serviceProvider = services.BuildServiceProvider();
+        var mediator = serviceProvider.GetRequiredService<ISimpleMediator>();
+        var userRegisteredEvent = new UserRegisteredEvent("testuser", "testemail");
+
+        // Act
+        await mediator.Publish(userRegisteredEvent);
+
+        // Assert
+        notificationHandlerMock.Verify(
+            handler => handler.Handle(It.IsAny<UserUnRegisteredEvent>(), It.IsAny<CancellationToken>()),
+            Times.Never()
+        );
+    }
+
+    [TestMethod]
+    public async Task Publish_DoesNotCallAnyHandlers_WhenThreeIncorrectHandlersAreRegistered()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddSimpleMediator(options =>
+        {
+            options.RegisterNotifications = true;
+        });
+
+        var notificationHandlerMock1 = new Mock<INotificationHandler<UserRegisteredEvent>>();
+        var notificationHandlerMock2 = new Mock<INotificationHandler<UserRegisteredEvent>>();
+        var notificationHandlerMock3 = new Mock<INotificationHandler<UserRegisteredEvent>>();
+
+        notificationHandlerMock1
+            .Setup(handler => handler.Handle(It.IsAny<UserRegisteredEvent>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        notificationHandlerMock2
+            .Setup(handler => handler.Handle(It.IsAny<UserRegisteredEvent>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        notificationHandlerMock3
+            .Setup(handler => handler.Handle(It.IsAny<UserRegisteredEvent>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        _ = services.AddScoped<INotificationHandler<UserRegisteredEvent>>(provider => notificationHandlerMock1.Object);
+        _ = services.AddScoped<INotificationHandler<UserRegisteredEvent>>(provider => notificationHandlerMock2.Object);
+        _ = services.AddScoped<INotificationHandler<UserRegisteredEvent>>(provider => notificationHandlerMock3.Object);
+
+        var serviceProvider = services.BuildServiceProvider();
+        var mediator = serviceProvider.GetRequiredService<ISimpleMediator>();
+        var userRegisteredEvent = new UserUnRegisteredEvent("testuser");
+
+        // Act
+        await mediator.Publish(userRegisteredEvent);
+
+        // Assert
+        notificationHandlerMock1.Verify(
+            handler => handler.Handle(It.IsAny<UserRegisteredEvent>(), It.IsAny<CancellationToken>()),
+            Times.Never()
+        );
+        notificationHandlerMock2.Verify(
+            handler => handler.Handle(It.IsAny<UserRegisteredEvent>(), It.IsAny<CancellationToken>()),
+            Times.Never()
+        );
+        notificationHandlerMock3.Verify(
+            handler => handler.Handle(It.IsAny<UserRegisteredEvent>(), It.IsAny<CancellationToken>()),
+            Times.Never()
+        );
+    }
 }
