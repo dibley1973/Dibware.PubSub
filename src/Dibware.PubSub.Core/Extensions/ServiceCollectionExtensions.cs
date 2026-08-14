@@ -2,7 +2,7 @@ namespace Dibware.PubSub.Core.Extensions;
 
 using System;
 using System.Collections.Generic;
-using Dibware.PubSub.Core.Configuration;
+using Dibware.PubSub.Core.Registration;
 using Dibware.PubSub.Core.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 

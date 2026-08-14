@@ -1,4 +1,4 @@
-namespace Dibware.PubSub.Core.Extensions;
+namespace Dibware.PubSub.Core.Registration;
 
 using System.Reflection;
 

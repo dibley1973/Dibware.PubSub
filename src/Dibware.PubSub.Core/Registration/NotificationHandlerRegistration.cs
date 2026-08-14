@@ -1,4 +1,4 @@
-namespace Dibware.PubSub.Core.Configuration;
+namespace Dibware.PubSub.Core.Registration;
 
 using System;
 
