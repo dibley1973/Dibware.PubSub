@@ -3,10 +3,15 @@ namespace Dibware.PubSub.Core;
 using Dibware.PubSub.Core.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
-// Ref: https://github.com/hasanxdev/DispatchR/blob/main/src/DispatchR/Mediator.cs
-// Ref: https://github.com/LuckyPennySoftware/MediatR/blob/main/src/MediatR/Mediator.cs
-
-public class SimpleMediator : ISimpleMediator<INotification>
+/// <summary>
+/// A simple mediator implementation that allows for publishing notifications to registered handlers.
+/// </summary>
+/// <remarks>
+/// Reference repositories for inspiration and implementation details:
+/// Ref: https://github.com/hasanxdev/DispatchR/blob/main/src/DispatchR/Mediator.cs
+/// Ref: https://github.com/LuckyPennySoftware/MediatR/blob/main/src/MediatR/Mediator.cs
+/// </remarks>
+public class SimpleMediator : ISimpleMediator
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -27,22 +32,23 @@ public class SimpleMediator : ISimpleMediator<INotification>
     public async Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
         where TNotification : INotification
     {
-        var handlers = _serviceProvider
+        var notificationHandlers = _serviceProvider
             .GetRequiredService<IEnumerable<INotificationHandler<TNotification>>>()
             .ToArray();
-        // TODO:Investigate if using Unsafe.As below is actully needed in our implementation
+
+        // TODO:Investigate if using Unsafe.As below is actully needed in our implementation.
+        // It is used in the DispatchR implementation, but we are not sure if it is needed in our case.
         //var unSafeHandlers = Unsafe.As<INotificationHandler<TNotification>[]>(handlers);
 
-        foreach (var handler in handlers)
+        foreach (var notificationHandler in notificationHandlers)
         {
             if (cancellationToken.IsCancellationRequested)
-                break;
+                break; // Dont handle any more notifications if cancellation is requested
 
-            var handlerTask = handler.Handle(notification, cancellationToken);
+            var handlerTask = notificationHandler.Handle(notification, cancellationToken);
 
             if (!handlerTask.IsCompletedSuccessfully)
                 await handlerTask;
         }
-        throw new NotImplementedException();
     }
 }
