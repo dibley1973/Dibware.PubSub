@@ -6,7 +6,7 @@ namespace Dibware.PubSub.Core.Contracts;
 /// <typeparam name="TEvent">
 /// The type of event to publish. This type should implement the INotification interface.
 /// </typeparam>
-public interface IPublisher<TEvent>
+public interface IPublisher
 {
     /// <summary>
     /// Asynchonously publishes a notification to all subscribers of the specified event type.
