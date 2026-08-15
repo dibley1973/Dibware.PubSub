@@ -6,6 +6,13 @@ using Dibware.PubSub.Core.UnitTests.Fakes.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
+/// <summary>
+/// Unit tests for the SimpleMediator class, specifically testing the parallel processing of notifications.
+/// </summary>
+/// <remarks>
+/// In all of these tests the handlers are MOCKS and are explictly registered in the service collection. The SimpleMediator is configured to register notifications, but the handlers are not automatically discovered and registered.
+/// This allows for precise control over which handlers are tested and ensures that the tests are isolated from any other handlers that may exist in the assembly.
+/// </remarks>
 [TestClass]
 public sealed class ParallelSimpleMediatorTests
 {
