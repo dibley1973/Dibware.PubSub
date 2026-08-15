@@ -18,3 +18,50 @@ This is a key driver for me, as the organisation I work for has a number of inte
 ## Getting Started
 
 TBC.
+
+## Registering with IServiceCollection
+
+Dibware.PubSub supports `Microsoft.Extensions.DependencyInjection.Abstractions` directly. To register `Dibware.PubSub.SimpleMediator` services and handlers:
+
+### Examples
+
+#### Using defaul processing mode (sequential):
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.RegisterNotifications = true;
+    });
+```
+
+##### Using parallel processing mode:
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.RegisterNotifications = true;
+        options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Parallel;
+    });
+```
+
+## Configuration Options
+
+The confuguration options are available via the `ConfigurationOptions` class. The following options are available:
+
+### RegisterNotifications
+
+Type: `bool`
+Default: `false`
+
+When set to `true`, the `SimpleMediator` will automatically register all notification handlers that are found in the assembly. 
+This is useful if you want to use the `SimpleMediator` as a notification bus.
+
+### ProcessingMode
+
+Type: `NotificationPublisherProcessingMode`
+Default: `NotificationPublisherProcessingMode.Sequential`
+
+Sets the processing mode for notification handlers. The following options are available:
+
+- `Sequential`: Notification handlers will be executed sequentially, one after the other.
+- `Parallel`: Notification handlers will be executed in parallel, using `Task.WhenAll`.
