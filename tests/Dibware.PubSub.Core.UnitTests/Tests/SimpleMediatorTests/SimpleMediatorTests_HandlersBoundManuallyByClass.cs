@@ -2,6 +2,7 @@ namespace Dibware.PubSub.Core.UnitTests.Tests.SimpleMediatorTests;
 
 using Dibware.PubSub.Core.Contracts;
 using Dibware.PubSub.Core.Extensions;
+using Dibware.PubSub.Core.Registration;
 using Dibware.PubSub.Core.UnitTests.Fakes.Events;
 using Dibware.PubSub.Core.UnitTests.Fakes.Handlers;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +43,7 @@ public sealed class SimpleMediatorTests_HandlersBoundManuallyByClass
     {
         services.AddSimpleMediator(options =>
         {
-            options.RegisterNotificationsFromAssemblies = false;
+            options.NotificationRegistrationMode = NotificationRegistrationMode.ManualRegistration;
             options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
         });
     }

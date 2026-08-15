@@ -2,6 +2,7 @@ namespace Dibware.PubSub.Core.UnitTests.Tests.SimpleMediatorTests;
 
 using Dibware.PubSub.Core.Contracts;
 using Dibware.PubSub.Core.Extensions;
+using Dibware.PubSub.Core.Registration;
 using Dibware.PubSub.Core.UnitTests.Fakes.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -180,7 +181,7 @@ public sealed class SimpleMediatorTests_ParallelProcessing
     private static void AddSimpleMediatorWithDefaultOptions(ServiceCollection services) =>
         services.AddSimpleMediator(options =>
         {
-            options.RegisterNotificationsFromAssemblies = false;
+            options.NotificationRegistrationMode = NotificationRegistrationMode.ManualRegistration;
             options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Parallel;
         });
 }
