@@ -23,14 +23,58 @@ TBC.
 
 Dibware.PubSub supports `Microsoft.Extensions.DependencyInjection.Abstractions` directly. To register `Dibware.PubSub.SimpleMediator` services and handlers:
 
-### Examples
+### Notification Registration Mode
 
-#### Using defaul processing mode (sequential):
+There are three available notification registration modes for notification handlers: two automatic and one manual. The default registration mode is manual.
+
+#### Automatic Registration Mode
+
+The two automatic modes are using assembly scanning to find and register notification handlers, or speccifying the notification handler types explicitly.
+
+Set `NotificationRegistrationMode` to `RegisterFromAssemblies` to use automatic registration mode with assembly scanning.
 
 ```C#
 services.AddSimpleMediator(options =>
     {
-        options.RegisterNotifications = true;
+        options.NotificationRegistrationMode = Registration.NotificationRegistrationMode.RegisterFromAssemblies;
+    });
+```
+
+Set `NotificationRegistrationMode` to `RegisterFromTypes` to use automatic registration mode with explicit type registration.
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.NotificationRegistrationMode = Registration.NotificationRegistrationMode.RegisterFromTypes;
+    });
+```
+
+#### Manual Registration Mode
+
+Set `NotificationRegistrationMode` to `ManualRegistration` to use manual registration mode.
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.NotificationRegistrationMode = Registration.NotificationRegistrationMode.ManualRegistration;
+    });
+```
+If manual mode is set then the system requires the user to register notification handlers manually.
+
+```C#
+ services.AddScoped(typeof(INotificationHandler<UserUnRegisteredEvent>), typeof(FakeUserUnRegisteredEventNotificationHandler));
+```
+
+### Processing Mode
+
+There are two available processing modes for notification handlers: sequential and parallel. The default processing mode is sequential.
+
+#### Using sequential processing mode (the default mode):
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
     });
 ```
 
@@ -39,7 +83,6 @@ services.AddSimpleMediator(options =>
 ```C#
 services.AddSimpleMediator(options =>
     {
-        options.RegisterNotifications = true;
         options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Parallel;
     });
 ```
@@ -48,17 +91,31 @@ services.AddSimpleMediator(options =>
 
 The confuguration options are available via the `ConfigurationOptions` class. The following options are available:
 
-### RegisterNotifications
+### AssembliesToScanForNotifications
 
-- Type: `bool`
-- Default: `false`
+- Type: `List<Assembly>`
+- Default: Empty collection
 
-When set to `true`, the `SimpleMediator` will automatically register all notification handlers that are found in the assembly. 
-This is useful if you want to use the `SimpleMediator` as a notification bus.
+### TypesToRegisterForNotifications
+
+- Type: `List<Type>`
+- Default: Empty collection
+
+
+### NotificationRegistrationMode
+
+- Type: `NotificationRegistrationMode` (enum)
+- Default: `ManualRegistration`
+
+Sets the registration mode for notification handlers. The following options are available:
+
+- `ManualRegistration`: Notification handlers must be registered manually.
+- `RegisterFromAssemblies`: Notification handlers will be automatically registered from the specified assemblies.
+- `RegisterFromTypes`: Notification handlers will be automatically registered from the specified types.
 
 ### ProcessingMode
 
-- Type: `NotificationPublisherProcessingMode`
+- Type: `NotificationPublisherProcessingMode` (enum)
 - Default: `NotificationPublisherProcessingMode.Sequential`
 
 Sets the processing mode for notification handlers. The following options are available:
