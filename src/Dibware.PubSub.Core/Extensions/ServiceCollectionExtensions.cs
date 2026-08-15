@@ -98,11 +98,11 @@ public static class ServiceCollectionExtensions
     /// </exception>
     private static void AddNotificationPublisher(this IServiceCollection services, ConfigurationOptions configurationOptions)
     {
-        if (configurationOptions.ProcessingMode == NotificationPublisherProcessingMode.Sequential)
-            services.AddScoped<INotificationPublisher, SequentialPublisher>();
-        else if (configurationOptions.ProcessingMode == NotificationPublisherProcessingMode.Parallel)
-            services.AddScoped<INotificationPublisher, ParallelPublisher>();
-        else
-            throw new ArgumentOutOfRangeException(nameof(configurationOptions.ProcessingMode), configurationOptions.ProcessingMode, "Invalid processing mode.");
+        _ = configurationOptions.ProcessingMode switch
+        {
+            NotificationPublisherProcessingMode.Sequential => services.AddScoped<INotificationPublisher, SequentialPublisher>(),
+            NotificationPublisherProcessingMode.Parallel => services.AddScoped<INotificationPublisher, ParallelPublisher>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(configurationOptions.ProcessingMode), configurationOptions.ProcessingMode, "Invalid processing mode.")
+        };
     }
 }
