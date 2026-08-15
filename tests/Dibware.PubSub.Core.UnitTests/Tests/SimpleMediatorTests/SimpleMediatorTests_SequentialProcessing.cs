@@ -1,4 +1,4 @@
-namespace Dibware.PubSub.Core.UnitTests.Tests;
+namespace Dibware.PubSub.Core.UnitTests.Tests.SimpleMediatorTests;
 
 using Dibware.PubSub.Core.Contracts;
 using Dibware.PubSub.Core.Extensions;
@@ -14,7 +14,7 @@ using Moq;
 /// This allows for precise control over which handlers are tested and ensures that the tests are isolated from any other handlers that may exist in the assembly.
 /// </remarks>
 [TestClass]
-public sealed class SequentialSimpleMediatorTests
+public sealed class SimpleMediatorTests_SequentialProcessing
 {
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsRegistered()
