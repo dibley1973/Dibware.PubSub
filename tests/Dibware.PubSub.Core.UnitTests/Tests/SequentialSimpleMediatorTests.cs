@@ -7,17 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 [TestClass]
-public sealed class SimpleMediatorTests
+public sealed class SequentialSimpleMediatorTests
 {
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsRegistered()
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddSimpleMediator(options =>
-        {
-            options.RegisterNotifications = true;
-        });
+        AddSimpleMediatorWithDefaultOptions(services);
 
         var notificationHandlerMock = new Mock<INotificationHandler<UserRegisteredEvent>>();
 
@@ -46,10 +43,7 @@ public sealed class SimpleMediatorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddSimpleMediator(options =>
-        {
-            options.RegisterNotifications = true;
-        });
+        AddSimpleMediatorWithDefaultOptions(services);
 
         var notificationHandlerMock1 = new Mock<INotificationHandler<UserRegisteredEvent>>();
         var notificationHandlerMock2 = new Mock<INotificationHandler<UserRegisteredEvent>>();
@@ -98,10 +92,7 @@ public sealed class SimpleMediatorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddSimpleMediator(options =>
-        {
-            options.RegisterNotifications = true;
-        });
+        AddSimpleMediatorWithDefaultOptions(services);
 
         var notificationHandlerMock = new Mock<INotificationHandler<UserUnRegisteredEvent>>();
 
@@ -130,10 +121,7 @@ public sealed class SimpleMediatorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddSimpleMediator(options =>
-        {
-            options.RegisterNotifications = true;
-        });
+        AddSimpleMediatorWithDefaultOptions(services);
 
         var notificationHandlerMock1 = new Mock<INotificationHandler<UserRegisteredEvent>>();
         var notificationHandlerMock2 = new Mock<INotificationHandler<UserRegisteredEvent>>();
@@ -176,4 +164,16 @@ public sealed class SimpleMediatorTests
             Times.Never()
         );
     }
+
+    /// <summary>
+    /// Adds the SimpleMediator to the service collection with default options for testing.
+    /// Set for sequential processing and to register notifications.
+    /// </summary>
+    /// <param name="services"></param>
+    private static void AddSimpleMediatorWithDefaultOptions(ServiceCollection services) =>
+        services.AddSimpleMediator(options =>
+        {
+            options.RegisterNotifications = true;
+            options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
+        });
 }
