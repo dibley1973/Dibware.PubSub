@@ -1,6 +1,5 @@
 using Dibware.PubSub.Core.Contracts;
 using Dibware.PubSub.Core.Registration;
-using Microsoft.VisualBasic;
 
 namespace Dibware.PubSub.Core.HandlerDiscovery;
 
