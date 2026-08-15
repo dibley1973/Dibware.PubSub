@@ -3,6 +3,7 @@ namespace Dibware.PubSub.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using Dibware.PubSub.Core.Contracts;
+using Dibware.PubSub.Core.HandlerDiscovery;
 using Dibware.PubSub.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,20 @@ using Microsoft.Extensions.DependencyInjection;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Represents the type of the notification handler interface, which is used to identify and register notification handlers in the service collection.
+    /// </summary>
+    public static readonly Type NotificationHandlerType = typeof(INotificationHandler<>);
+
+    /// <summary>
+    /// Represents a set of handler types that are used to identify and register various types of handlers in the service collection.
+    /// </summary>
+    public static readonly HashSet<Type> HandlerTypes = new()
+    {
+        NotificationHandlerType
+        // We can add more handler types here in the future if needed. I.e. IRequestHandler<>, etc.
+    };
+
     /// <summary>
     /// Adds the SimpleMediator to the service collection using configuration built by the specified action.
     /// </summary>
@@ -45,36 +60,24 @@ public static class ServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddSimpleMediator(this IServiceCollection services, ConfigurationOptions configurationOptions)
     {
-        services.AddScoped<ISimpleMediator, SimpleMediator>();
+        services
+            .AddScoped<ISimpleMediator, SimpleMediator>()
+            .AddNotificationPublisher(configurationOptions);
 
-        services.AddNotificationPublisher(configurationOptions);
-
-        var notificationHandlerType = typeof(INotificationHandler<>);
-
-        var handlerTypes = new HashSet<Type>()
-        {
-            notificationHandlerType
-            // We can add more handler types here in the future if needed. I.e. IRequestHandler<>, etc.
-        };
-
-        var allTypes = configurationOptions
-            .AssembliesToScanForNotifications
-            .SelectMany(x => x.GetTypes()).Distinct();
-
-        var allHandlerTypes = allTypes
-            .Where(type =>
-            {
-                var genericInterfaces = type.GetInterfaces()
-                    .Where(i => i.IsGenericType)
-                    .Select(i => i.GetGenericTypeDefinition())
-                    .ToList();
-
-                return genericInterfaces.Intersect(handlerTypes).Any();
-            })
+        // Discover all notification handlers based on the specified notification registration mode set in the configuration options.
+        var notificationHandlerDiscovery = NotificationHandlerDiscoveryFactory.Create(configurationOptions.NotificationRegistrationMode);
+        var allHandlerTypes = notificationHandlerDiscovery
+            .DiscoverNotificationHandlers(configurationOptions, HandlerTypes)
             .ToList();
 
-        if (configurationOptions.RegisterNotificationsFromAssemblies)
-            ServiceRegistrator.RegisterNotification(services, allHandlerTypes, notificationHandlerType);
+        // We only register notification handlers if the registration mode is set to either FromAssemblies or FromTypes.
+        // There is no need to register notification handlers if the registration mode is set to ManualRegistration,
+        // as it implies that the user will handle the registration manually.
+        if (configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.FromAssemblies ||
+            configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.FromTypes)
+        {
+            ServiceRegistrator.RegisterNotification(services, allHandlerTypes, NotificationHandlerType);
+        }
 
         return services;
     }
