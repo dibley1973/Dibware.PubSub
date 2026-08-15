@@ -2,11 +2,14 @@ namespace Dibware.PubSub.Core.Extensions;
 
 using System;
 using System.Collections.Generic;
-using Dibware.PubSub.Core.Registration;
 using Dibware.PubSub.Core.Contracts;
+using Dibware.PubSub.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
-public static partial class ServiceCollectionExtensions
+/// <summary>
+/// Provides extension methods for adding the SimpleMediator to an IServiceCollection.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Adds the SimpleMediator to the service collection using configuration built by the specified action.
@@ -44,6 +47,8 @@ public static partial class ServiceCollectionExtensions
     {
         services.AddScoped<ISimpleMediator, SimpleMediator>();
 
+        services.AddNotificationPublisher(configurationOptions);
+
         var syncNotificationHandlerType = typeof(INotificationHandler<>);
 
         var handlerTypes = new HashSet<Type>()
@@ -67,5 +72,29 @@ public static partial class ServiceCollectionExtensions
             ServiceRegistrator.RegisterNotification(services, allTypes, syncNotificationHandlerType);
 
         return services;
+    }
+
+    /// <summary>
+    /// Adds the appropriate notification publisher to the service collection based on the specified configuration options.
+    /// Interogates the <see cref="ConfigurationOptions.ProcessingMode"/> setting to determine whether to register a
+    /// sequential or parallel notification publisher.
+    /// </summary>
+    /// <param name="services">
+    /// The service collection to which the notification publisher will be added.
+    /// </param>
+    /// <param name="configurationOptions">
+    /// The configuration options for the notification publisher.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the <see cref="ConfigurationOptions.ProcessingMode"/> is set to an invalid value.
+    /// </exception>
+    private static void AddNotificationPublisher(this IServiceCollection services, ConfigurationOptions configurationOptions)
+    {
+        if (configurationOptions.ProcessingMode == NotificationPublisherProcessingMode.Sequential)
+            services.AddScoped<INotificationPublisher, SequentialPublisher>();
+        else if (configurationOptions.ProcessingMode == NotificationPublisherProcessingMode.Parallel)
+            services.AddScoped<INotificationPublisher, ParallelPublisher>();
+        else
+            throw new ArgumentOutOfRangeException(nameof(configurationOptions.ProcessingMode), configurationOptions.ProcessingMode, "Invalid processing mode.");
     }
 }
