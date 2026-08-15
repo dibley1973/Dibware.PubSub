@@ -44,7 +44,7 @@ public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByTypes
         {
             options.TypesToRegisterForNotifications.AddRange(typesToAdd);
             options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
-            options.NotificationRegistrationMode = NotificationRegistrationMode.FromTypes;
+            options.NotificationRegistrationMode = NotificationRegistrationMode.RegisterFromTypes;
         });
     }
 }

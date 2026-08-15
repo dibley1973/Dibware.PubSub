@@ -18,11 +18,11 @@ public enum NotificationRegistrationMode
     /// Register notification handlers from assemblies. This mode indicates the component
     /// should scan specified assemblies for notification handlers.
     /// </summary>
-    FromAssemblies = 1,
+    RegisterFromAssemblies = 1,
 
     /// <summary>
     /// Register notification handlers from a list of types. This mode indicates the component
     /// should register the specified types as notification handlers.
     /// </summary>
-    FromTypes = 2
+    RegisterFromTypes = 2
 }

@@ -73,8 +73,8 @@ public static class ServiceCollectionExtensions
         // We only register notification handlers if the registration mode is set to either FromAssemblies or FromTypes.
         // There is no need to register notification handlers if the registration mode is set to ManualRegistration,
         // as it implies that the user will handle the registration manually.
-        if (configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.FromAssemblies ||
-            configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.FromTypes)
+        if (configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.RegisterFromAssemblies ||
+            configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.RegisterFromTypes)
         {
             ServiceRegistrator.RegisterNotification(services, allHandlerTypes, NotificationHandlerType);
         }

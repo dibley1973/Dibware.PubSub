@@ -20,8 +20,8 @@ public static class NotificationHandlerDiscoveryFactory
         return registrationMode switch
         {
             NotificationRegistrationMode.ManualRegistration => new ManualNotificationHandlerDiscovery(),
-            NotificationRegistrationMode.FromAssemblies => new AssemblyNotificationHandlerDiscovery(),
-            NotificationRegistrationMode.FromTypes => new TypeNotificationHandlerDiscovery(),
+            NotificationRegistrationMode.RegisterFromAssemblies => new AssemblyNotificationHandlerDiscovery(),
+            NotificationRegistrationMode.RegisterFromTypes => new TypeNotificationHandlerDiscovery(),
             _ => throw new ArgumentOutOfRangeException(nameof(registrationMode), registrationMode, null)
         };
     }

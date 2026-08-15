@@ -45,7 +45,7 @@ public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByAssembly
         {
             options.AssembliesToScanForNotifications.AddRange(assembliesToAdd);
             options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
-            options.NotificationRegistrationMode = NotificationRegistrationMode.FromAssemblies;
+            options.NotificationRegistrationMode = NotificationRegistrationMode.RegisterFromAssemblies;
         });
     }
 }
