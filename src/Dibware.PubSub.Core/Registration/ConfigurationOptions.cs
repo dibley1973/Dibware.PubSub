@@ -8,14 +8,19 @@ using System.Reflection;
 public class ConfigurationOptions
 {
     /// <summary>
-    /// Set to <see langword="true"/> to register notification handlers. Default is <see langword="true"/>.
+    /// Set to <see langword="true"/> to register notification handlers from assemblies. Default is <see langword="false"/>.
+    /// Ensure if this property is set to <see langword="true"/>, that the <see cref="AssembliesToScanForNotifications"/>
+    /// property is populated with the assemblies containing the notification handlers.
     /// </summary>
-    public bool RegisterNotifications { get; set; } = true;
+    public bool RegisterNotificationsFromAssemblies { get; set; } = false;
 
     /// <summary>
     /// Gets the list of assemblies to scan for handlers and other components.
+    /// Ensure that <see cref="RegisterNotificationsFromAssemblies"/> is set to <see langword="true"/>,
+    /// if assemblies containing the notification handlers are included in this list.
+    /// Defaults to an empty list.
     /// </summary>
-    public List<Assembly> Assemblies { get; } = new();
+    public List<Assembly> AssembliesToScanForNotifications { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the processing mode for notification publishers. 

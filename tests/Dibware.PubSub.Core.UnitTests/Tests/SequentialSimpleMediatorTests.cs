@@ -173,7 +173,7 @@ public sealed class SequentialSimpleMediatorTests
     private static void AddSimpleMediatorWithDefaultOptions(ServiceCollection services) =>
         services.AddSimpleMediator(options =>
         {
-            options.RegisterNotifications = true;
+            options.RegisterNotificationsFromAssemblies = false;
             options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
         });
 }
