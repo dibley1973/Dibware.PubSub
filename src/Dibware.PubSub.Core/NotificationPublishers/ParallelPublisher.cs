@@ -1,5 +1,6 @@
 namespace Dibware.PubSub.Core.Contracts;
 
+using Dibware.PubSub.Core.NotificationHandling;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 /// <summary>
@@ -18,8 +19,8 @@ public class ParallelPublisher : INotificationPublisher
     /// <summary>
     /// Publishes a notification to one or more registered handlers by using Task.WhenAll with the list of Handler tasks.
     /// </summary>
-    /// <param name="handlerExecutors">
-    /// A collection of registered handlers that will be invoked to handle the notification.
+    /// <param name="notificationHandlerExecuters">
+    /// A collection of registered handlers (wrapped in an executor) that will be invoked to handle the notification.
     /// </param>
     /// <param name="notification">
     /// The notification to be published to the registered handlers.
@@ -27,11 +28,16 @@ public class ParallelPublisher : INotificationPublisher
     /// <param name="cancellationToken">
     /// A token to cancel the asynchronous operation.
     /// </param>
-    /// <returns></returns>
-    public Task Publish(IEnumerable<INotificationHandler<INotification>> handlerExecutors, INotification notification, CancellationToken cancellationToken)
+    /// <returns>
+    /// Represents the asynchronous operation of publishing the notification to the registered handlers.</returns>
+    public Task Publish<TNotification>(
+        IEnumerable<NotificationHandlerExecutor<TNotification>> notificationHandlerExecuters,
+        INotification notification,
+        CancellationToken cancellationToken)
+            where TNotification : INotification
     {
-        var tasks = handlerExecutors
-            .Select(handler => handler.Handle(notification, cancellationToken))
+        var tasks = notificationHandlerExecuters
+            .Select(executor => executor.HandlerCallback((TNotification)notification, cancellationToken))
             .ToArray();
 
         return Task.WhenAny(Task.WhenAll(tasks), cancellationToken.AsTask());
