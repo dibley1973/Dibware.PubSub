@@ -5,5 +5,5 @@ namespace Dibware.PubSub.Core.Contracts;
 /// Currently this is only used for publishing notifications, but could be extended to support
 /// requests and responses in the future.
 /// </summary>>
-public interface ISimpleMediator : IPublisher 
+public interface ISimpleMediator : IPublisher
 { }

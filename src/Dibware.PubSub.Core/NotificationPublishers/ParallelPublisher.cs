@@ -1,7 +1,6 @@
 namespace Dibware.PubSub.Core.Contracts;
 
 using Dibware.PubSub.Core.NotificationHandling;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 /// <summary>
 /// Uses Task.WhenAll with the list of Handler tasks to process notifications in parallel:
