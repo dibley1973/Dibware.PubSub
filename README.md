@@ -50,16 +50,16 @@ The confuguration options are available via the `ConfigurationOptions` class. Th
 
 ### RegisterNotifications
 
-Type: `bool`
-Default: `false`
+- Type: `bool`
+- Default: `false`
 
 When set to `true`, the `SimpleMediator` will automatically register all notification handlers that are found in the assembly. 
 This is useful if you want to use the `SimpleMediator` as a notification bus.
 
 ### ProcessingMode
 
-Type: `NotificationPublisherProcessingMode`
-Default: `NotificationPublisherProcessingMode.Sequential`
+- Type: `NotificationPublisherProcessingMode`
+- Default: `NotificationPublisherProcessingMode.Sequential`
 
 Sets the processing mode for notification handlers. The following options are available:
 
