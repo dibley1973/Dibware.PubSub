@@ -56,7 +56,7 @@ public class SimpleMediator : ISimpleMediator
 
         // TODO:Investigate if using Unsafe.As below is actully needed in our implementation.
         // It is used in the DispatchR implementation, but we are not sure if it is needed in our case.
-        //var unSafeHandlers = Unsafe.As<INotificationHandler<TNotification>[]>(handlers);
+        //var unSafeNotificationHandlers = Unsafe.As<INotificationHandler<TNotification>[]>(notificationHandlers);
 
         var notificationHandlerExecuters = notificationHandlers
             .Select(handler =>
@@ -68,27 +68,4 @@ public class SimpleMediator : ISimpleMediator
 
         await _notificationPublisher.Publish<TNotification>(notificationHandlerExecuters, notification, cancellationToken);
     }
-
-    //private ConcurrentDictionary<Type, NotificationHandlerWrapper> _notificationHandlerCache = new ConcurrentDictionary<Type, NotificationHandlerWrapper>();
 }
-
-//public abstract class NotificationHandlerWrapper
-//{
-//    public abstract Task Handle(INotification notification, CancellationToken cancellationToken);
-//}
-
-//public class NotificationHandlerWrapperImpl<TNotification> : NotificationHandlerWrapper
-//    where TNotification : INotification, new()
-//{
-//    public INotificationHandler<TNotification> Handler { get; }
-
-//    public NotificationHandlerWrapperImpl(INotificationHandler<TNotification> handler)
-//    {
-//        Handler = handler ?? throw new ArgumentNullException(nameof(handler));
-//    }
-
-//    public override Task Handle(INotification notification, CancellationToken cancellationToken)
-//    {
-//        return Handler.Handle((TNotification)notification, cancellationToken);
-//    }
-//}
