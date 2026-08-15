@@ -16,4 +16,10 @@ public class ConfigurationOptions
     /// Gets the list of assemblies to scan for handlers and other components.
     /// </summary>
     public List<Assembly> Assemblies { get; } = new();
+
+    /// <summary>
+    /// Gets or sets the processing mode for notification publishers. 
+    /// Default is <see cref="NotificationPublisherProcessingMode.Sequential"/>.
+    /// </summary>
+    public NotificationPublisherProcessingMode ProcessingMode { get; set; } = NotificationPublisherProcessingMode.Sequential;
 }
