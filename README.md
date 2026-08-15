@@ -31,6 +31,8 @@ There are three available notification registration modes for notification handl
 
 The two automatic modes are using assembly scanning to find and register notification handlers, or speccifying the notification handler types explicitly.
 
+##### Register by Assembly Scanning
+
 Set `NotificationRegistrationMode` to `RegisterFromAssemblies` to use automatic registration mode with assembly scanning.
 
 ```C#
@@ -40,6 +42,23 @@ services.AddSimpleMediator(options =>
     });
 ```
 
+If register from assemblies mode is set then the system requires the user to specify the assemblies to scan for notification handlers.
+
+For example:
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.NotificationRegistrationMode = Registration.NotificationRegistrationMode.RegisterFromAssemblies;
+        options.AssembliesToScanForNotifications = new List<Assembly>
+        {
+            typeof(FakeUserUnRegisteredEventNotificationHandler).Assembly
+        };
+    });
+```
+
+##### Register From Types
+
 Set `NotificationRegistrationMode` to `RegisterFromTypes` to use automatic registration mode with explicit type registration.
 
 ```C#
@@ -48,6 +67,22 @@ services.AddSimpleMediator(options =>
         options.NotificationRegistrationMode = Registration.NotificationRegistrationMode.RegisterFromTypes;
     });
 ```
+
+If register from types mode is set then the system requires the user to specify the notification handler types to register.
+
+For example: 
+
+```C#
+services.AddSimpleMediator(options =>
+    {
+        options.NotificationRegistrationMode = Registration.NotificationRegistrationMode.RegisterFromTypes;
+        options.TypesToRegisterForNotifications = new List<Type>
+        {
+            typeof(FakeUserUnRegisteredEventNotificationHandler)
+        };
+    });
+```
+
 
 #### Manual Registration Mode
 
