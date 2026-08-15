@@ -49,14 +49,19 @@ public static class ServiceCollectionExtensions
 
         services.AddNotificationPublisher(configurationOptions);
 
-        var syncNotificationHandlerType = typeof(INotificationHandler<>);
+        var notificationHandlerType = typeof(INotificationHandler<>);
 
         var handlerTypes = new HashSet<Type>()
         {
-            syncNotificationHandlerType
+            notificationHandlerType
+            // We can add more handler types here in the future if needed. I.e. IRequestHandler<>, etc.
         };
 
-        var allTypes = configurationOptions.Assemblies.SelectMany(x => x.GetTypes()).Distinct()
+        var allTypes = configurationOptions
+            .AssembliesToScanForNotifications
+            .SelectMany(x => x.GetTypes()).Distinct();
+
+        var allHandlerTypes = allTypes
             .Where(type =>
             {
                 var genericInterfaces = type.GetInterfaces()
@@ -68,8 +73,8 @@ public static class ServiceCollectionExtensions
             })
             .ToList();
 
-        if (configurationOptions.RegisterNotifications)
-            ServiceRegistrator.RegisterNotification(services, allTypes, syncNotificationHandlerType);
+        if (configurationOptions.RegisterNotificationsFromAssemblies)
+            ServiceRegistrator.RegisterNotification(services, allHandlerTypes, notificationHandlerType);
 
         return services;
     }
