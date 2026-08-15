@@ -124,7 +124,7 @@ services.AddSimpleMediator(options =>
 
 ## Configuration Options
 
-The confuguration options are available via the `ConfigurationOptions` class. The following options are available:
+The configuration options are available via the `ConfigurationOptions` class. The following options are available:
 
 ### AssembliesToScanForNotifications
 
