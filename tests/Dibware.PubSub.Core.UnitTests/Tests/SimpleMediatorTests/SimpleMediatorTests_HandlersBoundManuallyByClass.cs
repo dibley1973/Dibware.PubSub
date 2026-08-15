@@ -1,6 +1,5 @@
-namespace Dibware.PubSub.Core.UnitTests.Tests;
+namespace Dibware.PubSub.Core.UnitTests.Tests.SimpleMediatorTests;
 
-using System.Reflection;
 using Dibware.PubSub.Core.Contracts;
 using Dibware.PubSub.Core.Extensions;
 using Dibware.PubSub.Core.UnitTests.Fakes.Events;
@@ -8,7 +7,7 @@ using Dibware.PubSub.Core.UnitTests.Fakes.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 [TestClass]
-public sealed class ManuallyBoundHandlerSimpleMediatorTests
+public sealed class SimpleMediatorTests_HandlersBoundManuallyByClass
 {
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsManuallyRegistered()
@@ -41,13 +40,10 @@ public sealed class ManuallyBoundHandlerSimpleMediatorTests
     /// <param name="services"></param>
     private static void AddSimpleMediatorWithDefaultOptions(ServiceCollection services)
     {
-        var assembliesToAdd = new List<Assembly>() { typeof(SequentialSimpleMediatorTests).Assembly };
-
         services.AddSimpleMediator(options =>
         {
             options.RegisterNotificationsFromAssemblies = false;
             options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
-            //options.AssembliesToScanForNotifications.AddRange(assembliesToAdd);
         });
     }
 }
