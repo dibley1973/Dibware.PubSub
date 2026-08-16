@@ -17,7 +17,7 @@ internal static class ServiceRegistrator
     /// <param name="services">The service collection to which the notification handlers will be added.</param>
     /// <param name="allHandlerTypes">The list of types to scan for notification handlers.</param>
     /// <param name="notificationHandlerType">The type of the notification handler interface.</param>
-    public static void RegisterNotification(IServiceCollection services, List<Type> allHandlerTypes, Type notificationHandlerType)
+    public static void RegisterNotificationHandlers(IServiceCollection services, List<Type> allHandlerTypes, Type notificationHandlerType)
     {
         var allNotifications = allHandlerTypes
             .Where(IsConcreteClass())

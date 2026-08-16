@@ -77,7 +77,7 @@ public static class ServiceCollectionExtensions
         if (configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.RegisterFromAssemblies ||
             configurationOptions.NotificationRegistrationMode == NotificationRegistrationMode.RegisterFromTypes)
         {
-            ServiceRegistrator.RegisterNotification(services, allHandlerTypes, NotificationHandlerType);
+            ServiceRegistrator.RegisterNotificationHandlers(services, allHandlerTypes, NotificationHandlerType);
         }
 
         return services;
