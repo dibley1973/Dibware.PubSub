@@ -20,9 +20,9 @@ public class ServiceAlreadyRegsiteredException : Exception
     /// <param name="implementationType">The implementation type of the service.</param>
     public ServiceAlreadyRegsiteredException(Type serviceType, Type implementationType)
         : base($"""
-            A service has already been registered for service type '{serviceType.Name}' against implementation type '{implementationType.Name}'.
+            A service has already been registered for service type '{serviceType.FullName}' against implementation type '{implementationType.FullName}'.
             Only one service can be registered for a given service type. Please check for multiple concrete classes
-            which implement an interface, or inherif from a base class of type '{serviceType.Name}'.
+            which implement an interface, or inherif from a base class of type '{serviceType.FullName}'.
             """) { }
 
     /// <summary>
