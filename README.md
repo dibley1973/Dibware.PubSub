@@ -164,3 +164,35 @@ Sets the processing mode for notification handlers. The following options are av
 
 - `Sequential`: Notification handlers will be executed sequentially, one after the other.
 - `Parallel`: Notification handlers will be executed in parallel, using `Task.WhenAll`.
+
+## Creating Events To Publish
+
+Events can be classes or records and carry any data your require, but they must inherit from `INotification`.
+
+```c#
+/// <summary>
+/// Represents an event where a user was registered.
+/// </summary>
+/// <param name="UserName">Represents the user name.</param>
+/// <param name="Email">Represents the email address.</param>
+public record UserRegisteredEvent(string UserName, string Email) : INotification;
+```
+
+## Creating Handlers for Events
+
+Handlers must implement `INotificationHandler<TNotification>`, where `TNotification` is a class or record that implements `INotification`. For example the `UserRegisteredEvent` shown above.
+
+```c#
+/// <summary>
+/// Represents a handler for the UserRegisteredEvent used in unit tests.
+/// Once the Handle method is called, the HandleCalled property will be set to true.
+/// </summary>
+public class UserRegisteredEventNotificationHandler : INotificationHandler<UserRegisteredEvent>
+{
+    public Task Handle(UserRegisteredEvent _notification, CancellationToken cancellationToken)
+    {
+        // Add the code to respond to the event being raised, here.
+        // Add the code to respond to the event being raised, here.
+    }
+}
+```
