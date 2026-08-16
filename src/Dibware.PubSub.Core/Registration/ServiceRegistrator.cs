@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Dibware.PubSub.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 /// <summary>
 /// Provides methods for registering notification handlers in the service collection.
@@ -34,6 +35,9 @@ internal static class ServiceRegistrator
             if (serviceType.ContainsGenericParameters)
                 serviceType = serviceType.GetGenericTypeDefinition();
 
+            if (services.TypeIsAlreadyRegistered(serviceType))
+                throw new InvalidOperationException($"Type of '{serviceType}' has already been registered");
+            
             services.AddScoped(serviceType, implementationType);
         }
     }
