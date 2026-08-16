@@ -196,3 +196,17 @@ public class UserRegisteredEventNotificationHandler : INotificationHandler<UserR
     }
 }
 ```
+
+## Contributing
+
+You are welcome to contribute by bringing ideas to the table or working on ideas or bugs which others have raised.
+
+Feel free to fork this repo an have a play around.
+
+## Branching
+
+- `master` is (and should always be) the production ready branch
+- `develop` is for collating complete features witha view to being release to master*
+- `feature/my-funky-feature` is for actively devloping features
+
+*initially until there are more contributers than me, I will probably work straight in `develop`! I will do better once we have more contributers than me!
