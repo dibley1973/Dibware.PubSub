@@ -43,20 +43,16 @@ public class SimpleMediator : ISimpleMediator
         var notificationHandlers = _serviceProvider
             .GetRequiredService<IEnumerable<INotificationHandler<TNotification>>>();
 
-        // TODO: Investigate if we can cache the handlers to avoid resolving them every time.
-        // This could improve performance, especially if the same notification type is published frequently.
-        // We might need to create a warapper class for this due to generics.
-        //var handlerWrapper = _notificationHandlerCache.GetOrAdd(typeof(TNotification), static notificationType =>
-        //{
-        //    var wrapperType = typeof(NotificationHandlerWrapperImpl<>).MakeGenericType(notificationType);
-        //    var wrapper = Activator.CreateInstance(wrapperType) ??
-        //        throw new InvalidOperationException($"Could not create wrapper for type {notificationType}");
-        //    return (NotificationHandlerWrapper)wrapper;
-        //});
-
-        // TODO:Investigate if using Unsafe.As below is actully needed in our implementation.
-        // It is used in the DispatchR implementation, but we are not sure if it is needed in our case.
-        //var unSafeNotificationHandlers = Unsafe.As<INotificationHandler<TNotification>[]>(notificationHandlers);
+        // CACHING
+        // I did spend a fair few hours of my life investigating if we can cache the handlers to
+        // avoid resolving them every time. This could improve performance, especially if the same
+        // notification type is published highly frequently.
+        // I investigated many avenues but due to generics each one edded up at a brick wall.
+        // I mainly focused around various "wrapper classes" for this due to generics.
+        //
+        // In the end I have decided to forgo caching until it is proved in the future that
+        // service location is indeed a bottleneck. I'd like to hope that Microsoft have already
+        // built out as much performance gains as they can from the DependencyInjection components.
 
         var notificationHandlerExecuters = notificationHandlers
             .Select(handler =>
