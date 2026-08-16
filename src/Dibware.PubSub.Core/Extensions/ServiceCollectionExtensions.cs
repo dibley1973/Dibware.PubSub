@@ -2,6 +2,7 @@ namespace Dibware.PubSub.Core.Extensions;
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Dibware.PubSub.Core.Contracts;
 using Dibware.PubSub.Core.HandlerDiscovery;
 using Dibware.PubSub.Core.Registration;
@@ -81,6 +82,19 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Gets a value indicating if the specified type is already
+    /// </summary>
+    /// <param name="services">
+    /// The service collection which iss to be checked.
+    /// </param>
+    /// <param name="type">the <see cref="Type"/> to check for</param>
+    /// <returns>
+    /// Returns <see langword="true"/> of the type has already been added.
+    /// </returns>
+    public static bool TypeIsAlreadyRegistered(this IServiceCollection services, Type type) =>
+        services.Any(x => x.ServiceType == type.GetType());
 
     /// <summary>
     /// Adds the appropriate notification publisher to the service collection based on the specified configuration options.
