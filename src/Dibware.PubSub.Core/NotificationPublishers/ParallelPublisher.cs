@@ -30,10 +30,10 @@ public class ParallelPublisher : INotificationPublisher
     /// <returns>
     /// Represents the asynchronous operation of publishing the notification to the registered handlers.</returns>
     public Task Publish<TNotification>(
-        IEnumerable<NotificationHandlerExecutor<TNotification>> notificationHandlerExecuters,
-        INotification notification,
-        CancellationToken cancellationToken)
-            where TNotification : INotification
+       NotificationHandlerExecutor<TNotification>[] notificationHandlerExecuters,
+       TNotification notification,
+       CancellationToken cancellationToken)
+           where TNotification : INotification
     {
         var tasks = notificationHandlerExecuters
             .Select(executor => executor.HandlerCallback((TNotification)notification, cancellationToken))

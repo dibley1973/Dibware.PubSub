@@ -54,7 +54,7 @@ public class SimpleMediator : ISimpleMediator
         // service location is indeed a bottleneck. I'd like to hope that Microsoft have already
         // built out as much performance gains as they can from the DependencyInjection components.
 
-        var notificationHandlerExecuters = notificationHandlers
+        NotificationHandlerExecutor<TNotification>[] notificationHandlerExecuters = notificationHandlers
             .Select(handler =>
             {
                 Func<TNotification, CancellationToken, Task> handlerCallback = (notification, cancellationToken) => handler.Handle(notification, cancellationToken);
@@ -62,6 +62,6 @@ public class SimpleMediator : ISimpleMediator
             })
             .ToArray();
 
-        await _notificationPublisher.Publish<TNotification>(notificationHandlerExecuters, notification, cancellationToken);
+        await _notificationPublisher.Publish(notificationHandlerExecuters, notification, cancellationToken);
     }
 }

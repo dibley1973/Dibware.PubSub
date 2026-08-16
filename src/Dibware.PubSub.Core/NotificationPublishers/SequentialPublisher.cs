@@ -28,8 +28,8 @@ public class SequentialPublisher : INotificationPublisher
     /// Represents the asynchronous operation of publishing the notification to the registered handlers.
     /// </returns>
     public async Task Publish<TNotification>(
-        IEnumerable<NotificationHandlerExecutor<TNotification>> notificationHandlerExecuters,
-        INotification notification,
+        NotificationHandlerExecutor<TNotification>[] notificationHandlerExecuters,
+        TNotification notification,
         CancellationToken cancellationToken)
             where TNotification : INotification
     {
