@@ -94,7 +94,7 @@ public static class ServiceCollectionExtensions
     /// Returns <see langword="true"/> of the type has already been added.
     /// </returns>
     public static bool TypeIsAlreadyRegistered(this IServiceCollection services, Type type) =>
-        services.Any(x => x.ServiceType == type.GetType());
+        services.Any(x => x.ServiceType == type);
 
     /// <summary>
     /// Adds the appropriate notification publisher to the service collection based on the specified configuration options.
