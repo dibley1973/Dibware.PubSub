@@ -100,6 +100,13 @@ If manual mode is set then the system requires the user to register notification
  services.AddScoped(typeof(INotificationHandler<UserUnRegisteredEvent>), typeof(FakeUserUnRegisteredEventNotificationHandler));
 ```
 
+#### Limitaions
+
+> :warning: Currently the component only allows a service dependency binding a single concrete class handler for a given handler interface. 
+> During automatic registration using an assembly, an exception is thrown if two concrete classes are bound to the same interface are encountered.
+> No exceptions are thrown for Automatic binding via types, however you may experince off behaviour with only one of the handlers firing.
+> No exceptions are thrown for for manual binding. As long as you keep a reference to the handler that you bind the event handling will work. See unit tests.
+
 ### Processing Mode
 
 There are two available processing modes for notification handlers: sequential and parallel. The default processing mode is sequential.
