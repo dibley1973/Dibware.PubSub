@@ -1,12 +1,16 @@
 namespace Dibware.PubSub.Core.UnitTests.Tests.SimpleMediatorTests;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Xml.Linq;
 using Dibware.PubSub.Core.Contracts;
+using Dibware.PubSub.Core.Exceptions;
 using Dibware.PubSub.Core.Extensions;
 using Dibware.PubSub.Core.Registration;
 using Dibware.PubSub.Core.UnitTests.Fakes.Events;
 using Dibware.PubSub.Core.UnitTests.Fakes.Handlers;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Net.Mime.MediaTypeNames;
 
 [TestClass]
 public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByAssembly
@@ -20,16 +24,36 @@ public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByAssembly
 
         var serviceProvider = services.BuildServiceProvider();
         var mediator = serviceProvider.GetRequiredService<ISimpleMediator>();
-        var userRegisteredEvent = new UserUnRegisteredEvent("testuser");
+        var userRegisteredEvent = new UserRegisteredEvent("test-user", "email-address");
         var userUnRegisteredEventNotificationHandler =
-            (FakeUserUnRegisteredEventNotificationHandler)serviceProvider.GetRequiredService<INotificationHandler<UserUnRegisteredEvent>>();
+            (FakeUserRegisteredEventNotificationHandler)serviceProvider.GetRequiredService<INotificationHandler<UserRegisteredEvent>>();
 
         // Act
-        await mediator.Publish(userRegisteredEvent);
+         await mediator.Publish(userRegisteredEvent);
 
         // Assert
         Assert.IsNotNull(userUnRegisteredEventNotificationHandler);
         Assert.IsTrue(userUnRegisteredEventNotificationHandler.HandleCalled);
+    }
+
+    [TestMethod]
+    [Ignore("Uncomment 'SecondFakeUserUnRegisteredEventNotificationHandler' to run this test.")]
+    public async Task AddSimpleMediator_ThrowsExceptionWhen_WhentwoHandlersForSameEventAreAutomaticallyRegistered()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var assembliesToAdd = new List<Assembly>() { typeof(FakeUserUnRegisteredEventNotificationHandler).Assembly };
+
+        // Act
+        Action act = () => services.AddSimpleMediator(options =>
+        {
+            options.AssembliesToScanForNotifications.AddRange(assembliesToAdd);
+            options.ProcessingMode = Registration.NotificationPublisherProcessingMode.Sequential;
+            options.NotificationRegistrationMode = NotificationRegistrationMode.RegisterFromAssemblies;
+        });
+
+        // Assert
+        Assert.ThrowsExactly<ServiceAlreadyRegsiteredException>(act);
     }
 
     /// <summary>
@@ -39,7 +63,7 @@ public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByAssembly
     /// <param name="services"></param>
     private static void AddSimpleMediatorWithDefaultOptions(ServiceCollection services)
     {
-        var assembliesToAdd = new List<Assembly>() { typeof(FakeUserUnRegisteredEventNotificationHandler).Assembly };
+        var assembliesToAdd = new List<Assembly>() { typeof(FakeUserRegisteredEventNotificationHandler).Assembly };
 
         services.AddSimpleMediator(options =>
         {
