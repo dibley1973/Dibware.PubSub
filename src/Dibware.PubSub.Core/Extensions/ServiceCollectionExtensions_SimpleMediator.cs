@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 /// <summary>
 /// Provides extension methods for adding the SimpleMediator to an IServiceCollection.
 /// </summary>
-public static class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions_SimpleMediator
 {
     /// <summary>
     /// Represents the type of the notification handler interface, which is used to identify and register notification handlers in the service collection.
@@ -28,16 +28,16 @@ public static class ServiceCollectionExtensions
     };
 
     /// <summary>
-    /// Adds the SimpleMediator to the service collection using configuration built by the specified action.
+    /// Adds the <see cref="SimpleMediator"/> to the service collection using configuration built by the specified action.
     /// </summary>
     /// <param name="services">
-    /// The service collection to which the SimpleMediator will be added.
+    /// The service collection to which the <see cref="SimpleMediator"/> will be added.
     /// </param>
     /// <param name="buildConfiguration">
     /// An action that builds the configuration options for the SimpleMediator.
     /// </param>
     /// <returns>
-    /// The updated service collection with the SimpleMediator added.
+    /// The updated service collection with the <see cref="SimpleMediator"/> added.
     /// </returns>
     public static IServiceCollection AddSimpleMediator(this IServiceCollection services, Action<ConfigurationOptions> buildConfiguration)
     {
