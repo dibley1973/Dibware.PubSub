@@ -17,6 +17,8 @@ using Moq;
 [TestClass]
 public sealed class SimpleMediatorTests_SequentialProcessing
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsRegistered()
     {
@@ -37,7 +39,7 @@ public sealed class SimpleMediatorTests_SequentialProcessing
         var userRegisteredEvent = new UserRegisteredEvent("testuser", "testemail");
 
         // Act
-        await mediator.Publish(userRegisteredEvent);
+        await mediator.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         notificationHandlerMock.Verify(
@@ -78,7 +80,7 @@ public sealed class SimpleMediatorTests_SequentialProcessing
         var userRegisteredEvent = new UserRegisteredEvent("testuser", "testemail");
 
         // Act
-        await mediator.Publish(userRegisteredEvent);
+        await mediator.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         notificationHandlerMock1.Verify(
@@ -115,7 +117,7 @@ public sealed class SimpleMediatorTests_SequentialProcessing
         var userRegisteredEvent = new UserRegisteredEvent("testuser", "testemail");
 
         // Act
-        await mediator.Publish(userRegisteredEvent);
+        await mediator.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         notificationHandlerMock.Verify(
@@ -156,7 +158,7 @@ public sealed class SimpleMediatorTests_SequentialProcessing
         var userRegisteredEvent = new UserUnRegisteredEvent("testuser");
 
         // Act
-        await mediator.Publish(userRegisteredEvent);
+        await mediator.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         notificationHandlerMock1.Verify(
