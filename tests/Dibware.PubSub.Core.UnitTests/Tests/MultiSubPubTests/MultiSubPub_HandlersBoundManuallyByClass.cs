@@ -23,8 +23,7 @@ public sealed class MultiSubPub_HandlersBoundManuallyByClass
         var serviceProvider = services.BuildServiceProvider();
         var pubSub = serviceProvider.GetRequiredService<ISubscribeAndPublish>();
         var userRegisteredEvent = new UserRegisteredEvent("test-user", "email-address");
-        var userUnRegisteredEventNotificationHandler =
-            (FakeUserRegisteredEventNotificationHandler)serviceProvider.GetRequiredService<INotificationHandler<UserRegisteredEvent>>();
+        var userUnRegisteredEventNotificationHandler = new FakeUserRegisteredEventNotificationHandler();
 
         pubSub.Subscribe(userUnRegisteredEventNotificationHandler);
 
