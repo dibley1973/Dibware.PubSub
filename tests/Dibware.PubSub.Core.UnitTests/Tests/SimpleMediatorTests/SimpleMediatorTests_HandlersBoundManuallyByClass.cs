@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 [TestClass]
 public sealed class SimpleMediatorTests_HandlersBoundManuallyByClass
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsManuallyRegistered()
     {
@@ -27,7 +29,7 @@ public sealed class SimpleMediatorTests_HandlersBoundManuallyByClass
             (FakeUserUnRegisteredEventNotificationHandler)serviceProvider.GetRequiredService<INotificationHandler<UserUnRegisteredEvent>>();
 
         // Act
-        await mediator.Publish(userRegisteredEvent);
+        await mediator.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         Assert.IsNotNull(userUnRegisteredEventNotificationHandler);
