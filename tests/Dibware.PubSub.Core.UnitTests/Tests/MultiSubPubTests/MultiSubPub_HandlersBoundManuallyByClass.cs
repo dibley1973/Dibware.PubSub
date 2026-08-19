@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 [TestClass]
 public sealed class MultiSubPub_HandlersBoundManuallyByClass
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsManuallyRegistered()
     {
@@ -27,7 +29,7 @@ public sealed class MultiSubPub_HandlersBoundManuallyByClass
         pubSub.Subscribe(userUnRegisteredEventNotificationHandler);
 
         // Act
-        await pubSub.Publish(userRegisteredEvent);
+        await pubSub.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         Assert.IsNotNull(userUnRegisteredEventNotificationHandler);
