@@ -15,6 +15,8 @@ using static System.Net.Mime.MediaTypeNames;
 [TestClass]
 public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByAssembly
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public async Task Publish_CallsSingleHandler_WhenSingleHandlerIsAutomaticallyRegistered()
     {
@@ -29,7 +31,7 @@ public sealed class SimpleMediatorTests_HandlersBoundAutomaticallyByAssembly
             (FakeUserRegisteredEventNotificationHandler)serviceProvider.GetRequiredService<INotificationHandler<UserRegisteredEvent>>();
 
         // Act
-         await mediator.Publish(userRegisteredEvent);
+         await mediator.Publish(userRegisteredEvent, TestContext.CancellationToken);
 
         // Assert
         Assert.IsNotNull(userUnRegisteredEventNotificationHandler);
