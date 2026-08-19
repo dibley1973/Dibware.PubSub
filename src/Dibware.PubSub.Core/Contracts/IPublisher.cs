@@ -11,7 +11,7 @@ public interface IPublisher
     /// <summary>
     /// Asynchonously publishes a notification to all subscribers of the specified event type.
     /// </summary>
-    /// <typeparam name="TNotification">The type of notification to publish.</typeparam>
+    /// <typeparam name="TNotification">The type of notification to publish. Must implement <see cref="INotification"/>.</typeparam>
     /// <param name="notification">The actual notification to publish.</param>
     /// <param name="cancellationToken">An optional cancellation token</param>
     /// <returns>A task that represents the publish operation.</returns>
